@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "178594902732",
+    "firebase_url": "https://amazekart-bits.firebaseio.com",
+    "project_id": "amazekart-bits",
+    "storage_bucket": "amazekart-bits.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:178594902732:android:b7e49fbfc6817da0a70869",
+        "android_client_info": {
+          "package_name": "com.amazekartbits.amazekart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "178594902732-l4l02spbfnlrev8asn4s5is2aag7u0ud.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9m3uSTLy6HD095BFm6A9ihrhfOKZFygk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "178594902732-l4l02spbfnlrev8asn4s5is2aag7u0ud.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
