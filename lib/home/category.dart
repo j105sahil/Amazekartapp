@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:amazekart/home/product.dart';
 import 'package:dio/dio.dart';
-import 'package:amazekart/home/home.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 class Category extends StatefulWidget {
   List<dynamic> data;
   Category(this.data);
@@ -31,29 +31,15 @@ class _CategoryState extends State<Category> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: Colors.blue[100],
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/back.png"),
-            fit: BoxFit.cover,
-          ),
-        ),
-        // Box decoration takes a gradient
-//          gradient: LinearGradient(
-//            // Where the linear gradient begins and ends
-//            begin: Alignment.topRight,
-//            end: Alignment.bottomLeft,
-//            // Add one stop for each color. Stops should increase from 0 to 1
-//            stops: [0.1, 0.5, 0.7, 0.9],
-//            colors: [
-//              // Colors are easy thanks to Flutter's Colors class.
-//              Colors.red[300],
-//              Colors.red[200],
-//              Colors.red[100],
-//              Colors.red[50],
-//            ],
+//        decoration: BoxDecoration(
+//          image: DecorationImage(
+//            image: AssetImage("assets/back.png"),
+//            fit: BoxFit.cover,
 //          ),
 //        ),
+        // Box decoration takes a gradient
         height: MediaQuery.of(context).size.height,
         child: Stack(
           children: <Widget>[
@@ -79,78 +65,9 @@ class _CategoryState extends State<Category> {
                               padding: const EdgeInsets.all(10.0),
                               child: Container(),
                             );
-//                            return Padding(
-//                              padding: EdgeInsets.all(10),
-//                              child: ButtonTheme(
-//                                height: 80,
-//                                child: RaisedButton(
-//                                  shape: RoundedRectangleBorder(
-//                                    borderRadius: BorderRadius.circular(80.0),),
-//                                  elevation: 10,
-//                                  onPressed: () {},
-//                                  textColor: Colors.white,
-//                                  color: Color(0xFF083780),
-//                                  padding: const EdgeInsets.all(8.0),
-//                                  child: new Text(
-//                                    "Try Selling Something",
-//                                    style: TextStyle(fontSize: 25),
-//                                  ),
-//                                ),
-//                              ),
-//                            );
                           }
                           else if(i==1){
                             return Container();
-//                            return Row(
-//                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                              children: <Widget>[
-//                                Material(
-//                                  elevation: 10.0,
-//                                  shape: CircleBorder(),
-//                                  clipBehavior: Clip.hardEdge,
-//                                  color: Colors.transparent,
-//                                  child: Ink.image(
-//                                    image: AssetImage('assets/collaboration.png'),
-//                                    fit: BoxFit.cover,
-//                                    width: MediaQuery.of(context).size.width/3.2,
-//                                    height: 120.0,
-//                                    child: InkWell(
-//                                      onTap: () {},
-//                                    ),
-//                                  ),
-//                                ),
-//                                Material(
-//                                  elevation: 10.0,
-//                                  shape: CircleBorder(),
-//                                  clipBehavior: Clip.hardEdge,
-//                                  color: Colors.transparent,
-//                                  child: Ink.image(
-//                                    image: AssetImage('assets/collaboration.png'),
-//                                    fit: BoxFit.cover,
-//                                    width: MediaQuery.of(context).size.width/3.2,
-//                                    height: 120.0,
-//                                    child: InkWell(
-//                                      onTap: () {},
-//                                    ),
-//                                  ),
-//                                ),
-//                                Material(
-//                                  elevation: 10.0,
-//                                  shape: CircleBorder(),
-//                                  clipBehavior: Clip.hardEdge,
-//                                  color: Colors.transparent,
-//                                  child: Ink.image(
-//                                    image: AssetImage('assets/collaboration.png'),
-//                                    fit: BoxFit.cover,
-//                                    width: MediaQuery.of(context).size.width/3.2,
-//                                    height: 120.0,
-//                                    child: InkWell(
-//                                      onTap: () {},
-//                                    ),
-//                                  ),
-//                                )
-//                              ],
-//                            );
                           }
                           else{
                             i =2*index-2;
@@ -166,27 +83,31 @@ class _CategoryState extends State<Category> {
                                       },
                                       splashColor: Color(0xFF083663),
                                       child: Card(
+                                          color:Color(0xFF083663),
                                           shape: new RoundedRectangleBorder(
                                             borderRadius: new BorderRadius.circular(15),
                                           ),
                                           elevation: 10,
                                           child: Column(
                                             children: <Widget>[
-                                              Image.network(
-                                                data[i-2]['images'][0]['imageurl'],
-                                                height: MediaQuery.of(context).size.height/3.5,
-                                                width: MediaQuery.of(context).size.width/2.2,
+                                              Padding(
+                                                padding: const EdgeInsets.all(5.0),
+                                                child: Image.network(
+                                                  data[i-2]['images'][0]['imageurl'],
+                                                  height: MediaQuery.of(context).size.height/3.5,
+                                                  width: MediaQuery.of(context).size.width/2.2,
+                                                ),
                                               ),
                                               Container(
                                                 width: MediaQuery.of(context).size.width/2.2,
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(1.0),
-                                                  child:  Center(child: AutoSizeText(data[i-2]['productname'],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),maxLines: 2,overflow: TextOverflow.ellipsis,)),
+                                                  child:  Center(child: AutoSizeText(data[i-2]['productname'],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color:Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                                                 ),
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.fromLTRB(0,1,0,1),
-                                                child: Container(child: AutoSizeText('₹ '+data[i-2]['price'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),maxLines: 2)),
+                                                child: Container(child: AutoSizeText('₹ '+data[i-2]['price'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color:Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                                               )
                                             ],
                                           )
@@ -201,27 +122,31 @@ class _CategoryState extends State<Category> {
                                       },
                                       splashColor: Color(0xFF083663),
                                       child: Card(
+                                          color:Color(0xFF083663),
                                           shape: new RoundedRectangleBorder(
                                             borderRadius: new BorderRadius.circular(15),
                                           ),
                                           elevation: 10,
                                           child: Column(
                                             children: <Widget>[
-                                              Image.asset(
-                                                'assets/logo.png',
-                                                height: MediaQuery.of(context).size.height/3.5,
-                                                width: MediaQuery.of(context).size.width/2.2,
+                                              Padding(
+                                                padding: const EdgeInsets.all(5.0),
+                                                child: Image.asset(
+                                                  'assets/logo.png',
+                                                  height: MediaQuery.of(context).size.height/3.5,
+                                                  width: MediaQuery.of(context).size.width/2.2,
+                                                ),
                                               ),
                                               Container(
                                                 width: MediaQuery.of(context).size.width/2.2,
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(1.0),
-                                                  child:  AutoSizeText('',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),maxLines: 2,overflow: TextOverflow.ellipsis,),
+                                                  child:  AutoSizeText('',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,),
                                                 ),
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.fromLTRB(0,1,0,1),
-                                                child: Container(child: AutoSizeText('',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),maxLines: 2)),
+                                                child: Container(child: AutoSizeText('',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                                               )
                                             ],
                                           )
@@ -243,27 +168,31 @@ class _CategoryState extends State<Category> {
                                       },
                                       splashColor: Color(0xFF083663),
                                       child: Card(
+                                          color:Color(0xFF083663),
                                           shape: new RoundedRectangleBorder(
                                             borderRadius: new BorderRadius.circular(15),
                                           ),
                                           elevation: 10,
                                           child: Column(
                                             children: <Widget>[
-                                              Image.network(
-                                                data[i-2]['images'][0]['imageurl'],
-                                                height: MediaQuery.of(context).size.height/3.5,
-                                                width: MediaQuery.of(context).size.width/2.2,
+                                              Padding(
+                                                padding: const EdgeInsets.all(5.0),
+                                                child: Image.network(
+                                                  data[i-2]['images'][0]['imageurl'],
+                                                  height: MediaQuery.of(context).size.height/3.5,
+                                                  width: MediaQuery.of(context).size.width/2.2,
+                                                ),
                                               ),
                                               Container(
                                                 width: MediaQuery.of(context).size.width/2.2,
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(1.0),
-                                                  child:  Center(child: AutoSizeText(data[i-2]['productname'],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),maxLines: 2,overflow: TextOverflow.ellipsis,)),
+                                                  child:  Center(child: AutoSizeText(data[i-2]['productname'],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                                                 ),
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.fromLTRB(0,1,0,1),
-                                                child: Container(child: AutoSizeText('₹ '+data[i-2]['price'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),maxLines: 2)),
+                                                child: Container(child: AutoSizeText('₹ '+data[i-2]['price'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                                               )
                                             ],
                                           )
@@ -278,27 +207,31 @@ class _CategoryState extends State<Category> {
                                       },
                                       splashColor: Color(0xFF083663),
                                       child: Card(
+                                          color:Color(0xFF083663),
                                           shape: new RoundedRectangleBorder(
                                             borderRadius: new BorderRadius.circular(15),
                                           ),
                                           elevation: 10,
                                           child: Column(
                                             children: <Widget>[
-                                              Image.network(
-                                                data[i-1]['images'][0]['imageurl'],
-                                                height: MediaQuery.of(context).size.height/3.5,
-                                                width: MediaQuery.of(context).size.width/2.2,
+                                              Padding(
+                                                padding: const EdgeInsets.all(5.0),
+                                                child: Image.network(
+                                                  data[i-1]['images'][0]['imageurl'],
+                                                  height: MediaQuery.of(context).size.height/3.5,
+                                                  width: MediaQuery.of(context).size.width/2.2,
+                                                ),
                                               ),
                                               Container(
                                                 width: MediaQuery.of(context).size.width/2.2,
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(2.0),
-                                                  child:  Center(child: AutoSizeText(data[i-1]['productname'],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),maxLines: 2,overflow: TextOverflow.ellipsis,)),
+                                                  child:  Center(child: AutoSizeText(data[i-1]['productname'],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                                                 ),
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.fromLTRB(0,1,0,1),
-                                                child: Container(child: AutoSizeText('₹ '+data[i-1]['price'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),maxLines: 2)),
+                                                child: Container(child: AutoSizeText('₹ '+data[i-1]['price'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                                               )
                                             ],
                                           )
@@ -355,13 +288,18 @@ class _CategoryState extends State<Category> {
                         ),
                         onPressed: () async{
                           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                            return Opacity(child:Center(
-                              child: CircularProgressIndicator(),
-                            ),opacity:1);
+                            return Scaffold(
+                              backgroundColor: Colors.white,
+                              body: Center(
+                                child: SpinKitCubeGrid(
+                                  color:  Color(0xFF083663),
+                                ),
+                              ),
+                            );
                           }));
                           Response response;
                           Dio dio = new Dio();
-                          response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"search": t,"cat":data[0]["category"].toString()});
+                          response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"search": t,"cat":data[0]["category"].toString()});
 //                          data = response.data;
                           Navigator.pop(context);
                           if(response.data.length==0){
@@ -375,6 +313,32 @@ class _CategoryState extends State<Category> {
                                 MaterialPageRoute(builder: (context) => Category(response.data)));
                           }
 
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.refresh,
+                          color: Color(0xFF442B2D),
+                        ),
+                        onPressed: () async{
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                            return Scaffold(
+                              backgroundColor: Colors.white,
+                              body: Center(
+                                child: SpinKitCubeGrid(
+                                  color:  Color(0xFF083663),
+                                ),
+                              ),
+                            );
+                          }));
+                          Response response;
+                          Dio dio = new Dio();
+                          response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"cat":data[0]["category"].toString()});
+//                          data = response.data;
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => Category(response.data)));
                         },
                       ),
                     ],

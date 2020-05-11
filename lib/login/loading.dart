@@ -1,8 +1,12 @@
+import 'package:amazekart/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'dart:io';
 import 'package:toast/toast.dart';
 import 'package:connectivity/connectivity.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+
 class ColorLoader3 extends StatefulWidget {
   final double radius;
   final double dotRadius;
@@ -22,7 +26,7 @@ class _ColorLoader3State extends State<ColorLoader3>
   bool isConnected=false;
   double radius;
   double dotRadius;
-
+  Map<String,String> m;
   @override
   void initState() {
     super.initState();
@@ -215,10 +219,14 @@ class _ColorLoader3State extends State<ColorLoader3>
     }
     return false;
   }
-  Future delay(){
+  Future delay() async{
+    _read();
     Future.delayed(const Duration(milliseconds: 4000), () {
       setState(() {
-        Navigator.pushReplacementNamed(context, '/home');
+        print(m);
+        Navigator.pushReplacement(context, MaterialPageRoute(
+            builder: (context) =>
+                MyApp(m)));
       });
     });
   }
@@ -230,6 +238,20 @@ class _ColorLoader3State extends State<ColorLoader3>
 
     controller.dispose();
     super.dispose();
+  }
+  Future<String> _read() async {
+    String text;
+    try {
+      final Directory directory = await getApplicationDocumentsDirectory();
+      final File file1 = File('${directory.path}/temp.txt');
+      final File file2 = File('${directory.path}/temp1.txt');
+      var email = await file1.readAsString();
+      var pass = await file2.readAsString();
+      this.m =  {"email":email,"pass":pass};
+    } catch (e) {
+      print("Couldn't read file");
+    }
+    return text;
   }
 }
 

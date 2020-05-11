@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:amazekart/login/background.dart';
 import 'package:amazekart/login/loading.dart';
 import 'package:amazekart/login/loginUi.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 void main() => runApp(MaterialApp(
   debugShowCheckedModeBanner: false,
   initialRoute: '/loading',
   routes: {
-    '/home': (context) => MyApp(),
     '/loading': (context) => ColorLoader3(radius: 20,dotRadius: 6,),
   },
 ));
 class MyApp extends StatelessWidget {
   Map<String,String> m;
+  MyApp(this.m);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

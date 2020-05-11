@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:amazekart/home/product.dart';
 import 'package:dio/dio.dart';
 import 'package:amazekart/home/home.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+enum ConfirmAction { CANCEL, ACCEPT }
 class Cart extends StatefulWidget {
   List<dynamic> data;
   Cart(this.data);
@@ -90,70 +95,92 @@ class _Cart extends State<Cart> {
                                               child: Padding(
                                                 padding: const EdgeInsets.all(
                                                     1.0),
-                                                child: Center(
-                                                    child: AutoSizeText(
-                                                      data[i]['productname'],
-                                                      style: TextStyle(
-                                                          fontWeight: FontWeight
-                                                              .bold,
-                                                          fontSize: 30),
-                                                      maxLines: 2,
-                                                      overflow: TextOverflow
-                                                          .ellipsis,)),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children: <Widget>[
+                                                    Center(
+                                                        child: AutoSizeText(
+                                                          data[i]['productname'],
+                                                          style: TextStyle(
+                                                              fontWeight: FontWeight
+                                                                  .bold,
+                                                              fontSize: 30),
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,)),
+                                                    IconButton(icon:Icon(Icons.delete), iconSize: 25,onPressed: () async{
+                                                      showDialog(context: context,
+                                                          builder: (BuildContext context){
+                                                        return Container(
+                                                          child: AlertDialog(
+                                                            title: Text('Confirm Delete'),
+                                                            actions: <Widget>[
+                                                              FlatButton(
+                                                                child: const Text('CANCEL'),
+                                                                onPressed: () {
+                                                                  Navigator.of(context).pop(ConfirmAction.CANCEL);
+                                                                },
+                                                              ),
+                                                              FlatButton(
+                                                                child: const Text('ACCEPT'),
+                                                                onPressed: () async{
+//                                                                  Navigator.of(context).pop(ConfirmAction.ACCEPT);
+                                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                                                                    return Scaffold(
+                                                                      backgroundColor: Colors.white,
+                                                                      body: Center(
+                                                                        child: SpinKitCubeGrid(
+                                                                          color:  Color(0xFF083663),
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  }));
+                                                                  var dio = Dio();
+                                                                  FormData formData = new FormData.fromMap({
+                                                                    "id": data[i]["id"],
+                                                                    "email": data[i]["user"]["email"],
+                                                                    "price": data[i]["price"],
+                                                                    "category":data[i]["category"],
+                                                                    "productname":data[i]["productname"],
+                                                                    "description":data[i]["description"],
+                                                                    "delete":"true"
+                                                                  });
+                                                                  Response response1;
+                                                                  String url = 'http://amazekart.tech/mainapp/updateapi/';
+                                                                  response1 = await dio.post(url, data: formData );
+                                                                  Navigator.pop(context);
+                                                                  Navigator.of(context).pop(ConfirmAction.ACCEPT);
+                                                                  setState(() {
+                                                                    data = response1.data;
+
+                                                                  });
+
+                                                                },
+                                                              )
+                                                            ],
+                                                          ),
+                                                        );
+                                                          });
+
+                                                    },)
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
-                                          Image.network(
-                                            data[i]['images'][0]['imageurl'],
-                                            height: MediaQuery
-                                                .of(context)
-                                                .size
-                                                .height / 4,
-                                            width: MediaQuery
-                                                .of(context)
-                                                .size
-                                                .width / 1.2,
-                                          ),
-                                          Row(
-                                            children: <Widget>[
-                                              FlatButton(
-                                                onPressed: () async {
-                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                                                    return Opacity(child:Center(
-                                                      child: CircularProgressIndicator(),
-                                                    ),opacity:1);
-                                                  }));
-                                                  var dio = Dio();
-                                                  FormData formData = new FormData.fromMap({
-                                                    "id": data[i]["id"],
-                                                    "email": data[i]["user"]["email"],
-                                                    "price": data[i]["price"],
-                                                    "category":data[i]["category"],
-                                                    "productname":data[i]["productname"],
-                                                    "description":data[i]["description"],
-                                                    "delete":"true"
-                                                  });
-                                                  Response response1;
-                                                  String url = 'http://amazekart.tech:8000/mainapp/updateapi/';
-                                                  response1 = await dio.post(url, data: formData );
-                                                  Navigator.pop(context);
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(builder: (context) => Cart(response1.data)));
-
-                                                },
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      10.0),
-                                                  child: Text('Delete',
-                                                    style: TextStyle(
-                                                        fontSize: 25),),
-                                                ),
-                                              ),
-                                              IconButton(icon:Icon(Icons.delete), iconSize: 25,onPressed: (){
-
-                                              },)
-                                            ],
+                                          Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Image.network(
+                                              data[i]['images'][0]['imageurl'],
+                                              height: MediaQuery
+                                                  .of(context)
+                                                  .size
+                                                  .height / 4,
+                                              width: MediaQuery
+                                                  .of(context)
+                                                  .size
+                                                  .width / 1.2,
+                                            ),
                                           ),
                                         ],
                                       )

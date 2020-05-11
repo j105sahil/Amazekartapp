@@ -1,10 +1,11 @@
-import 'package:amazekart/main.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:amazekart/home/home.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:toast/toast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'dart:io';
+import 'package:amazekart/main.dart';
 class Login extends StatefulWidget {
   Map<String,String> m;
   Login( Map<String,String> m){
@@ -100,25 +101,7 @@ class _LoginState extends State<Login> {
 
 //                Navigator.of(context).pop();
               },
-              child: roundedRectButton("Let's get Started", signInGradients, false,teEmail,tePassword,context),
-            ),
-            FlatButton(
-              color: Colors.transparent,
-              textColor: Colors.black,
-              disabledColor: Colors.grey,
-              disabledTextColor: Colors.black,
-              padding: EdgeInsets.all(8.0),
-              splashColor: Colors.transparent,
-              child: Text(
-                "AutoFill",
-                style: TextStyle(fontSize: 15.0),
-              ),
-              onPressed: () async{
-                await _read();
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyHomePage(m)));
-              },
+              child: roundedRectButton("Let's get Started", signInGradients, false,context),
             ),
             FlatButton(
               color: Colors.transparent,
@@ -252,9 +235,14 @@ class _LoginState extends State<Login> {
                               new GestureDetector(
                                 onTap: () async{
                                   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                                    return Opacity(child:Center(
-                                      child: CircularProgressIndicator(),
-                                    ),opacity:1);
+                                    return Scaffold(
+                                      backgroundColor: Colors.white,
+                                      body: Center(
+                                        child: SpinKitCubeGrid(
+                                          color:  Color(0xFF083663),
+                                        ),
+                                      ),
+                                    );
                                   }));
                                   if(tePassword==teConfirmPassword){
                                     var dio = Dio();
@@ -266,10 +254,13 @@ class _LoginState extends State<Login> {
                                       "phoneno": teMobile,
                                     });
                                     Response response;
-                                    String url = 'http://amazekart.tech:8000/mainapp/registerapi/';
+                                    String url = 'http://amazekart.tech/mainapp/registerapi/';
                                     response = await dio.post(url, data: formData );
                                     if(response.data.toString()=="[F]"){
                                       _showToast2(context);
+                                    }
+                                    else{
+                                      _showToast4(context);
                                     }
                                   }
                                   else{
@@ -306,58 +297,63 @@ class _LoginState extends State<Login> {
 
   }
 
-  _read() async {
-    final prefs = await SharedPreferences.getInstance();
-    final key1 = 'email';
-    final key2 = 'pass';
-    String email = await prefs.get(key1);
-    String pass = await prefs.get(key2);
-    this.m =  {"email":email,"pass":pass};
+//  _read() async {
+//    final prefs = await SharedPreferences.getInstance();
+//    final key1 = 'email';
+//    final key2 = 'pass';
+//    String email = await prefs.get(key1);
+//    String pass = await prefs.get(key2);
+//    this.m =  {"email":email,"pass":pass};
+//  }
+  Future<String> _read() async {
+    String text;
+    try {
+      final Directory directory = await getApplicationDocumentsDirectory();
+      final File file1 = File('${directory.path}/temp.txt');
+      final File file2 = File('${directory.path}/temp1.txt');
+      var email = await file1.readAsString();
+      var pass = await file2.readAsString();
+      this.m =  {"email":email,"pass":pass};
+    } catch (e) {
+      print("Couldn't read file");
+    }
+    return text;
+  }
+  _write(String email,String pass) async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final File file1 = File('${directory.path}/temp.txt');
+    final File file2 = File('${directory.path}/temp1.txt');
+    await file1.writeAsString(email);
+    await file2.writeAsString(pass);
   }
 
-  _save(String email,String password) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key1 = 'email';
-    final key2 = 'pass';
-    prefs.setString(key1, email);
-    prefs.setString(key2, password);
-  }
-
-//  Widget getTextField(
-//      String inputBoxName, TextEditingController inputBoxController,bool isPass,bool c){
-//    var loginBtn = new Material(
-//      color: Colors.transparent,
-//      child:Padding(
-//        padding: const EdgeInsets.all(20.0),
-//        child: new TextFormField(
-//          style: TextStyle(fontSize: 20),
-//          autocorrect: true,
-//          obscureText: isPass,
-//          controller: inputBoxController,
-//          decoration: new InputDecoration(
-//            hintText: inputBoxName,
-//            suffixIcon: c? null:isPass? Icon(Icons.lock_outline):Icon(Icons.email),
-//          ),
-//        ),
-//      )
-//    );
-//    return loginBtn;
+//  _save(String email,String password) async {
+//    final prefs = await SharedPreferences.getInstance();
+//    final key1 = 'email';
+//    final key2 = 'pass';
+//    prefs.setString(key1, email);
+//    prefs.setString(key2, password);
 //  }
 
   void _showToast(BuildContext context) {
-    Toast.show("Authenticating User", context, gravity: Toast.BOTTOM);
+    Toast.show("Authenticating User", context, gravity: Toast.TOP);
   }
 
   void _showToast1(BuildContext context) {
-    Toast.show("Wrong Credentials", context, gravity: Toast.BOTTOM);
+    Toast.show("Wrong Credentials", context, gravity: Toast.TOP);
   }
   void _showToast2(BuildContext context) {
-    Toast.show("Already Exist", context, gravity: Toast.BOTTOM);
+    Toast.show("Already Exist", context, gravity: Toast.TOP);
+  }
+  void _showToast3(BuildContext context) {
+    Toast.show("Getting Data", context, gravity: Toast.TOP);
+  }
+  void _showToast4(BuildContext context) {
+    Toast.show("Account Successfully Created", context, gravity: Toast.TOP);
   }
 
-
   Widget roundedRectButton(
-      String title, List<Color> gradient, bool isEndIconVisible,String email,String password,BuildContext context) {
+      String title, List<Color> gradient, bool isEndIconVisible,BuildContext context) {
     return Builder(builder: (BuildContext mContext) {
       return Padding(
         padding: EdgeInsets.only(bottom: 10),
@@ -385,25 +381,39 @@ class _LoginState extends State<Login> {
                 onPressed: () async{
                   _showToast(context);
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                   return Opacity(child:Center(
-                     child: CircularProgressIndicator(),
-                   ),opacity:1);
+                   return Scaffold(
+                     backgroundColor: Colors.white,
+                     body: Center(
+                       child: SpinKitCubeGrid(
+                         color:  Color(0xFF083663),
+                       ),
+                     ),
+                   );
                   }));
                   var dio = Dio();
-                FormData formData = new FormData.fromMap({
-                  "email": email,
-                  "password": password,
-                });
+//                  String a = m==null?teEmail:m["email"];
+//                  String b = m==null?tePassword:m["pass"];
+                  FormData formData = new FormData.fromMap({
+                    "email": m==null?teEmail:m["email"],
+                    "password": m==null?tePassword:m["pass"],
+                  });
+//                FormData formData = new FormData.fromMap({
+//                  "email": teEmail,
+//                  "password": tePassword,
+//                });
                 Response response1;
-                String url = 'http://amazekart.tech:8000/mainapp/loginapi/';
+                String url = 'http://amazekart.tech/mainapp/loginapi/';
                 response1 = await dio.post(url, data: formData );
-                Navigator.pop(context);
+                _showToast3(context);
                   if(response1.data.toString()!="[F]"){
-                    _save(email, password);
-                    Response response = await dio.get('http://amazekart.tech:8000/mainapp/productdatabase/?format=json');
+                    _write(teEmail,tePassword);
+                    //_save(teEmail, tePassword);
+                    Response response = await dio.get('http://amazekart.tech/mainapp/productdatabase/?format=json');
+                    Navigator.pop(context);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => Page(response.data,response1.data)));
                   }
                   else{
+                    Navigator.pop(context);
                     _showToast1(context);
                   }
                 },

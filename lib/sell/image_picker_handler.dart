@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:amazekart/sell/image_picker_dialog.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerHandler {
@@ -31,8 +30,6 @@ class ImagePickerHandler {
   }
 
   Future cropImage(File image) async {
-//    File croppedFile = await ImageCropper.cropImage(
-//      sourcePath: image.path,);
     _listener.userImage(image);
   }
 

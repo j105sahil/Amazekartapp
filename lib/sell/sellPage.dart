@@ -7,6 +7,8 @@ import 'package:amazekart/sell/image_picker_handler.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
+
 class Sell extends StatefulWidget {
   List<dynamic> data;
   Map<dynamic,dynamic> user;
@@ -84,9 +86,13 @@ class _SellState extends State<Sell> with TickerProviderStateMixin,ImagePickerLi
   @override
   Widget build(BuildContext context) {
       Future uploadPic(BuildContext context,File _image,int i) async{
+        ImageProperties properties = await FlutterNativeImage.getImageProperties(_image.path);
+        File compressedFile = await FlutterNativeImage.compressImage(_image.path,
+            targetWidth: 600,
+            targetHeight: (properties.height * 600 / properties.width).round());
         String fileName = basename(_image.path);
-        StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(DateTime.now().millisecondsSinceEpoch.toString());
-        StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+        StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child("img"+DateTime.now().millisecondsSinceEpoch.toString());
+        StorageUploadTask uploadTask = firebaseStorageRef.putFile(compressedFile);
         var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
         String url = dowurl.toString();
         print(url);
@@ -157,6 +163,8 @@ class _SellState extends State<Sell> with TickerProviderStateMixin,ImagePickerLi
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: TextField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
                         controller: _controller[1],
                         autocorrect: true,
                         style: TextStyle(fontSize: 20),
@@ -299,13 +307,17 @@ class _SellState extends State<Sell> with TickerProviderStateMixin,ImagePickerLi
               ),
               OutlineButton(
                 onPressed: () async{
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                    return Opacity(child:Center(
-                      child: CircularProgressIndicator(),
-                    ),opacity:1);
-                  }));
                   _showToast2(context);
+//                  Navigator.push(context, MaterialPageRoute(builder: (context) => ColorLoader()));
+//                  Future.delayed(const Duration(milliseconds: 4000), () {
+//                    setState(() {
+//                      Navigator.pop(context);
+//
+//                    });
+
+//                  });
                   if(_image0!=null || _image1!=null ||_image2!=null ||_image3!=null){
+                    Navigator.pop(context);
                     if(_image0!=null)
                       await uploadPic(context, _image0,0);
                     if(_image1!=null)
@@ -323,18 +335,17 @@ class _SellState extends State<Sell> with TickerProviderStateMixin,ImagePickerLi
                       urls.add(url3);
                     if(_image3!=null)
                       urls.add(url4);
-
                     var dio = Dio();
                     FormData formData = new FormData.fromMap({
-                      "name": productName,
-                      "cat": _selectedType.toString(),
-                      "price": price,
-                      "desc":description,
+                      "name": productName==null?"None":productName,
+                      "cat": _selectedType.toString()=="Category"?"Other":_selectedType.toString(),
+                      "price": price==null?"0":price,
+                      "desc":description==null?"None":description,
                       "image":urls.toString(),
                       "email":user["email"],
                     });
                     Response response1;
-                    String url = 'http://amazekart.tech:8000/mainapp/productdatabase/';
+                    String url = 'http://amazekart.tech/mainapp/productdatabase/';
                     response1 = await dio.post(url, data: formData );
                     _showToast1(context);
                    // 18.222.65.138
@@ -342,8 +353,6 @@ class _SellState extends State<Sell> with TickerProviderStateMixin,ImagePickerLi
                   else{
                     _showToast(context);
                   }
-                  Navigator.pop(context);
-                  Navigator.pop(context);
                   },
                 child: Padding(
                   padding: const EdgeInsets.all(5.0),
@@ -357,6 +366,7 @@ class _SellState extends State<Sell> with TickerProviderStateMixin,ImagePickerLi
       ),
     );
   }
+
   //
   Widget getTextField(
       String inputBoxName, TextEditingController inputBoxController){
@@ -382,12 +392,11 @@ class _SellState extends State<Sell> with TickerProviderStateMixin,ImagePickerLi
     Toast.show("Upload a photo", context, gravity: Toast.BOTTOM);
   }
   void _showToast1(BuildContext context) {
-    Toast.show("Successful", context, gravity: Toast.BOTTOM);
+    Toast.show("Successfully uploaded", context, gravity: Toast.BOTTOM);
   }
   void _showToast2(BuildContext context) {
     Toast.show("Uploading", context, gravity: Toast.BOTTOM);
   }
-
 @override
   userImage(File _image) {
     setState(() {

@@ -73,6 +73,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                 SizedBox(height: 12.0),
                 _buildDivider(screenSize),
                 SizedBox(height: 12.0),
+                _buildCategory(),
+                SizedBox(height: 12.0),
+                _buildDivider(screenSize),
+                SizedBox(height: 12.0),
                 _buildDetailsAndMaterialWidgets(),
                 SizedBox(height: 12.0),
               ],
@@ -174,7 +178,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
           FlatButton(
             onPressed: () async {
               String temp = m['productname'];
-             FlutterOpenWhatsapp.sendSingleMessage("91"+m["user"]["phoneno"], "I'm interested in buying *$temp* which your are selling on AmazeKart");
+             FlutterOpenWhatsapp.sendSingleMessage("91"+m["user"]["phoneno"], "I'm interested in buying *$temp* as listed by you on AmazeKart");
             },
             child:Text(
               m["user"]["phoneno"],
@@ -190,12 +194,43 @@ class _ProductDetailPageState extends State<ProductDetailPage>
             Icons.keyboard_backspace,
             color: Colors.grey[700],
           ),
-          Text("Click here",style: TextStyle(color: Colors.grey[700]),)
+          Text("  Click here  ",style: TextStyle(color: Colors.grey[700]),),
+          Icon(
+            Icons.message,
+            color: Colors.grey[700],
+          ),
         ],
       ),
     );
   }
-
+  _buildCategory() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Icon(
+                Icons.category,
+                color: Colors.grey[700],
+              ),
+              SizedBox(
+                width: 22.0,
+              ),
+              Text(
+                m["category"],
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
   _buildSizeChartWidgets() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -240,13 +275,18 @@ class _ProductDetailPageState extends State<ProductDetailPage>
             ),
           ),
           SizedBox(height: 12.0),
-          Container(
-              child: Text(
-                m['description'],
-                style: TextStyle(
-                  color: Colors.black,fontSize: 15
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+                child: Center(
+                  child: Text(
+                    m['description'],
+                    style: TextStyle(
+                      color: Colors.black,fontSize: 15
+                    ),
+                  ),
                 ),
-              ),
+            ),
           ),
         ],
       ),

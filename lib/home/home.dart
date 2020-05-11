@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:amazekart/home/category.dart';
 import 'package:amazekart/home/product.dart';
-import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'dart:async';
 import 'package:toast/toast.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:amazekart/home/cart.dart';
 class Page extends StatefulWidget {
   List<dynamic> data;
@@ -46,6 +45,7 @@ class _PageState extends State<Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue[100],
       key: _scaffoldKey,
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -75,19 +75,85 @@ class _PageState extends State<Page> {
 //            Clothes & Shoes
 //            Other
             ListTile(
+              title: Text('Homepage',style: TextStyle(fontSize:15),),
+              trailing: Icon(Icons.home,color: Colors.black,),
+              onTap: () async{
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Center(
+                      child: SpinKitCubeGrid(
+                        color:  Color(0xFF083663),
+                      ),
+                    ),
+                  );
+                }));
+                Response response;
+                Dio dio = new Dio();
+                response = await dio.get("http://amazekart.tech/mainapp/productdatabase");
+//                          data = response.data;
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => Page(response.data,user)));
+              },
+            ),
+            ListTile(
+              title: Text('Your Products',style: TextStyle(fontSize:15),),
+              trailing: Icon(Icons.shopping_cart,color: Colors.black,),
+              onTap: () async{
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Center(
+                      child: SpinKitCubeGrid(
+                        color:  Color(0xFF083663),
+                      ),
+                    ),
+                  );
+                }));
+                Response response;
+                Dio dio = new Dio();
+                response = await dio.get("http://amazekart.tech/mainapp/productdatabase",queryParameters: {"email": user["email"]});
+                Navigator.pop(context);
+                if(response.data.length==0){
+                  _showToast(context);
+                }
+                else{
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Cart(response.data)));
+                }
+              },
+            ),
+            ListTile(
+              title: Text('Sell something',style: TextStyle(fontSize:15),),
+              trailing: Icon(Icons.attach_money,color: Colors.black,),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Sell(null,user)));
+              },
+            ),
+            ListTile(
               title: Text('Electronics'),
               onTap: () async{
                 // Update the state of the app
                 // ...
                 // Then close the drawer
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return Opacity(child:Center(
-                    child: CircularProgressIndicator(),
-                  ),opacity:1);
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Center(
+                      child: SpinKitCubeGrid(
+                        color:  Color(0xFF083663),
+                      ),
+                    ),
+                  );
                 }));
                 Response response;
                 Dio dio = new Dio();
-                response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"cat": "Electronics"});
+                response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"cat": "Electronics"});
                 Navigator.pop(context);
                 if(response.data.length==0){
                   _showToast(context);
@@ -105,13 +171,18 @@ class _PageState extends State<Page> {
                 // ...
                 // Then close the drawer
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return Opacity(child:Center(
-                    child: CircularProgressIndicator(),
-                  ),opacity:1);
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Center(
+                      child: SpinKitCubeGrid(
+                        color:  Color(0xFF083663),
+                      ),
+                    ),
+                  );
                 }));
                 Response response;
                 Dio dio = new Dio();
-                response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"cat": 'Course Books'});
+                response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"cat": 'Course Books'});
                 Navigator.pop(context);
                 if(response.data.length==0){
                   _showToast(context);
@@ -123,19 +194,24 @@ class _PageState extends State<Page> {
               },
             ),
             ListTile(
-              title: Text('Laptop/Mobile Acc.'),
+              title: Text('Laptop/Mobile accessories'),
               onTap: () async{
                 // Update the state of the app
                 // ...
                 // Then close the drawer
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return Opacity(child:Center(
-                    child: CircularProgressIndicator(),
-                  ),opacity:1);
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Center(
+                      child: SpinKitCubeGrid(
+                        color:  Color(0xFF083663),
+                      ),
+                    ),
+                  );
                 }));
                 Response response;
                 Dio dio = new Dio();
-                response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"cat": 'Laptop/Mobile Acc.'});
+                response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"cat": 'Laptop/Mobile Acc.'});
                 Navigator.pop(context);
                 if(response.data.length==0){
                   _showToast(context);
@@ -147,19 +223,24 @@ class _PageState extends State<Page> {
               },
             ),
             ListTile(
-              title: Text('Room Accessory'),
+              title: Text('Room accessories'),
               onTap: () async{
                 // Update the state of the app
                 // ...
                 // Then close the drawer
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return Opacity(child:Center(
-                    child: CircularProgressIndicator(),
-                  ),opacity:1);
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Center(
+                      child: SpinKitCubeGrid(
+                        color:  Color(0xFF083663),
+                      ),
+                    ),
+                  );
                 }));
                 Response response;
                 Dio dio = new Dio();
-                response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"cat": 'Room Accessory'});
+                response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"cat": 'Room Accessory'});
                 Navigator.pop(context);
                 if(response.data.length==0){
                   _showToast(context);
@@ -177,13 +258,18 @@ class _PageState extends State<Page> {
                 // ...
                 // Then close the drawer
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return Opacity(child:Center(
-                    child: CircularProgressIndicator(),
-                  ),opacity:1);
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Center(
+                      child: SpinKitCubeGrid(
+                        color:  Color(0xFF083663),
+                      ),
+                    ),
+                  );
                 }));
                 Response response;
                 Dio dio = new Dio();
-                response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"cat": 'Novels'});
+                response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"cat": 'Novels'});
                 Navigator.pop(context);
                 if(response.data.length==0){
                   _showToast(context);
@@ -201,13 +287,18 @@ class _PageState extends State<Page> {
                 // ...
                 // Then close the drawer
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return Opacity(child:Center(
-                    child: CircularProgressIndicator(),
-                  ),opacity:1);
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Center(
+                      child: SpinKitCubeGrid(
+                        color:  Color(0xFF083663),
+                      ),
+                    ),
+                  );
                 }));
                 Response response;
                 Dio dio = new Dio();
-                response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"cat": 'Gym Equipment'});
+                response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"cat": 'Gym Equipment'});
                 Navigator.pop(context);
                 if(response.data.length==0){
                   _showToast(context);
@@ -225,13 +316,18 @@ class _PageState extends State<Page> {
                 // ...
                 // Then close the drawer
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return Opacity(child:Center(
-                    child: CircularProgressIndicator(),
-                  ),opacity:1);
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Center(
+                      child: SpinKitCubeGrid(
+                        color:  Color(0xFF083663),
+                      ),
+                    ),
+                  );
                 }));
                 Response response;
                 Dio dio = new Dio();
-                response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"cat": 'Clothes & Shoes'});
+                response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"cat": 'Clothes & Shoes'});
                 Navigator.pop(context);
                 if(response.data.length==0){
                   _showToast(context);
@@ -249,13 +345,18 @@ class _PageState extends State<Page> {
                 // ...
                 // Then close the drawer
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return Opacity(child:Center(
-                    child: CircularProgressIndicator(),
-                  ),opacity:1);
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Center(
+                      child: SpinKitCubeGrid(
+                        color:  Color(0xFF083663),
+                      ),
+                    ),
+                  );
                 }));
                 Response response;
                 Dio dio = new Dio();
-                response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"cat": 'Online Accounts'});
+                response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"cat": 'Online Accounts'});
                 Navigator.pop(context);
                 if(response.data.length==0){
                   _showToast(context);
@@ -273,13 +374,18 @@ class _PageState extends State<Page> {
                 // ...
                 // Then close the drawer
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return Opacity(child:Center(
-                    child: CircularProgressIndicator(),
-                  ),opacity:1);
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Center(
+                      child: SpinKitCubeGrid(
+                        color:  Color(0xFF083663),
+                      ),
+                    ),
+                  );
                 }));
                 Response response;
                 Dio dio = new Dio();
-                response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"cat": 'Other'});
+                response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"cat": 'Other'});
                 Navigator.pop(context);
                 if(response.data.length==0){
                   _showToast(context);
@@ -290,41 +396,25 @@ class _PageState extends State<Page> {
                 }
               },
             ),
+            Divider(),
             ListTile(
-              title: Text('Your Products',style: TextStyle(fontSize:15),),
-              trailing: Icon(Icons.shopping_cart,color: Colors.black,),
+              title: Text('Contact Us',style: TextStyle(fontSize:15),),
+              trailing: Icon(Icons.phone,color: Colors.black,),
               onTap: () async{
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return Opacity(child:Center(
-                    child: CircularProgressIndicator(),
-                  ),opacity:1);
-                }));
-                Response response;
-                Dio dio = new Dio();
-                response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase",queryParameters: {"email": user["email"]});
-                Navigator.pop(context);
-                if(response.data.length==0){
-                  _showToast(context);
-                }
-                else{
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Cart(response.data)));
-                }
+                FlutterOpenWhatsapp.sendSingleMessage("6281236859606", " ");
               },
             ),
+
           ],
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/back.png"),
-            fit: BoxFit.cover,
-          ),
-        ),
+//        decoration: BoxDecoration(
+//          image: DecorationImage(
+//            image: AssetImage("assets/back.png"),
+//            fit: BoxFit.cover,
+//          ),
+//        ),
           // Box decoration takes a gradient
 //          gradient: LinearGradient(
 //            // Where the linear gradient begins and ends
@@ -349,7 +439,7 @@ class _PageState extends State<Page> {
                 Container(
                   color:Color(0xFF083663),
                   width: MediaQuery.of(context).size.width,
-                  height: 100.0,
+                  height: 110.0,
                   child: Center(
                     child: Text(
                       "AmazeKart",
@@ -378,7 +468,7 @@ class _PageState extends State<Page> {
                               padding: const EdgeInsets.all(8.0),
                               child: new Text(
 
-                                "Selling Something",
+                                "Sell something",
                                 style: TextStyle(fontSize: 25),
                               ),
                             ),
@@ -389,99 +479,129 @@ class _PageState extends State<Page> {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                          Material(
-                            elevation: 10.0,
-                            shape: CircleBorder(),
-                            clipBehavior: Clip.hardEdge,
-                            color: Colors.transparent,
-                            child: Ink.image(
-                              image: AssetImage('assets/b1.png'),
-                              fit: BoxFit.cover,
-                              width: MediaQuery.of(context).size.width/3.2,
-                              height: 120.0,
-                              child: InkWell(
-                                onTap: () async{
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                                    return Opacity(child:Center(
-                                      child: CircularProgressIndicator(),
-                                    ),opacity:1);
-                                  }));
-                                  Response response;
-                                  Dio dio = new Dio();
-                                  response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"cat": 'Course Books'});
-                                  Navigator.pop(context);
-                                  if(response.data.length==0){
-                                    _showToast(context);
-                                  }
-                                  else{
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Category(response.data)));
-                                  }
-                                },
+                          Column(
+                            children: <Widget>[
+                              Material(
+                                elevation: 10.0,
+                                shape: CircleBorder(),
+                                clipBehavior: Clip.hardEdge,
+                                color: Colors.transparent,
+                                child: Ink.image(
+                                  image: AssetImage('assets/p1.jpeg'),
+                                  fit: BoxFit.cover,
+                                  width: MediaQuery.of(context).size.width/3.2,
+                                  height: 120.0,
+                                  child: InkWell(
+                                    onTap: () async{
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                                        return Scaffold(
+                                          backgroundColor: Colors.white,
+                                          body: Center(
+                                            child: SpinKitCubeGrid(
+                                              color:  Color(0xFF083663),
+                                            ),
+                                          ),
+                                        );
+                                      }));
+                                      Response response;
+                                      Dio dio = new Dio();
+                                      response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"cat": 'Course Books'});
+                                      Navigator.pop(context);
+                                      if(response.data.length==0){
+                                        _showToast(context);
+                                      }
+                                      else{
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Category(response.data)));
+                                      }
+                                    },
+                                  ),
+                                ),
                               ),
-                            ),
-                        ),
-                          Material(
-                              elevation: 10.0,
-                              shape: CircleBorder(),
-                              clipBehavior: Clip.hardEdge,
-                              color: Colors.white,
-                              child: Ink.image(
-                              image: AssetImage('assets/b2.png'),
-                              fit: BoxFit.cover,
-                              width: MediaQuery.of(context).size.width/3.2,
-                              height: 120.0,
-                                child: InkWell(
-                              onTap: () async{
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                                  return Opacity(child:Center(
-                                    child: CircularProgressIndicator(),
-                                  ),opacity:1);
-                                }));
-                                Response response;
-                                Dio dio = new Dio();
-                                response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"cat": "Electronics"});
-                                Navigator.pop(context);
-                                if(response.data.length==0){
-                                  _showToast(context);
-                                }
-                                else{
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Category(response.data)));
-                                }
-                              },
-                              ),
-                              ),
+                              Text("Course Books",style:TextStyle(fontSize: 18,fontWeight: FontWeight.bold))
+                            ],
                           ),
-                          Material(
-                              elevation: 10.0,
-                              shape: CircleBorder(),
-                              clipBehavior: Clip.hardEdge,
-                              color: Colors.white,
-                              child: Ink.image(
-                              image: AssetImage('assets/b3.png'),
-                              fit: BoxFit.cover,
-                              width: MediaQuery.of(context).size.width/3.2,
-                              height: 120.0,
-                                child: InkWell(
-                              onTap: () async{
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                                  return Opacity(child:Center(
-                                    child: CircularProgressIndicator(),
-                                  ),opacity:1);
-                                }));
-                                Response response;
-                                Dio dio = new Dio();
-                                response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"cat": 'Room Accessory'});
-                                Navigator.pop(context);
-                                if(response.data.length==0){
-                                  _showToast(context);
-                                }
-                                else{
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Category(response.data)));
-                                }
-                              },
-                              ),
-                              ),
-                          )
+                            Column(
+                              children: <Widget>[
+                                Material(
+                                  elevation: 10.0,
+                                  shape: CircleBorder(),
+                                  clipBehavior: Clip.hardEdge,
+                                  color: Colors.transparent,
+                                  child: Ink.image(
+                                    image: AssetImage('assets/p3.jpeg'),
+                                    fit: BoxFit.cover,
+                                    width: MediaQuery.of(context).size.width/3.2,
+                                    height: 120.0,
+                                    child: InkWell(
+                                      onTap: () async{
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                                          return Scaffold(
+                                            backgroundColor: Colors.white,
+                                            body: Center(
+                                              child: SpinKitCubeGrid(
+                                                color:  Color(0xFF083663),
+                                              ),
+                                            ),
+                                          );
+                                        }));
+                                        Response response;
+                                        Dio dio = new Dio();
+                                        response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"cat": "Electronics"});
+                                        Navigator.pop(context);
+                                        if(response.data.length==0){
+                                          _showToast(context);
+                                        }
+                                        else{
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => Category(response.data)));
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Text("Electronics",style:TextStyle(fontSize: 18,fontWeight: FontWeight.bold))
+                              ],
+                            ),
+                            Column(
+                              children: <Widget>[
+                                Material(
+                                  elevation: 10.0,
+                                  shape: CircleBorder(),
+                                  clipBehavior: Clip.hardEdge,
+                                  color: Colors.transparent,
+                                  child: Ink.image(
+                                    image: AssetImage('assets/p2.jpeg'),
+                                    fit: BoxFit.cover,
+                                    width: MediaQuery.of(context).size.width/3.2,
+                                    height: 120.0,
+                                    child: InkWell(
+                                      onTap: () async{
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                                          return Scaffold(
+                                            backgroundColor: Colors.white,
+                                            body: Center(
+                                              child: SpinKitCubeGrid(
+                                                color:  Color(0xFF083663),
+                                              ),
+                                            ),
+                                          );
+                                        }));
+                                        Response response;
+                                        Dio dio = new Dio();
+                                        response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"cat": 'Room Accessory'});
+                                        Navigator.pop(context);
+                                        if(response.data.length==0){
+                                          _showToast(context);
+                                        }
+                                        else{
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => Category(response.data)));
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Text("Room Accessories",style:TextStyle(fontSize: 18,fontWeight: FontWeight.bold))
+                              ],
+                            ),
                           ],
                         );
                       }
@@ -499,27 +619,31 @@ class _PageState extends State<Page> {
                                   },
                                   splashColor: Color(0xFF083663),
                                   child: Card(
+                                      color:Color(0xFF083663),
                                       shape: new RoundedRectangleBorder(
                                         borderRadius: new BorderRadius.circular(15),
                                       ),
                                       elevation: 10,
                                       child: Column(
                                         children: <Widget>[
-                                          Image.network(
-                                            data[i-2]['images'][0]['imageurl'],
-                                            height: MediaQuery.of(context).size.height/3.5,
-                                            width: MediaQuery.of(context).size.width/2.2,
+                                          Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Image.network(
+                                              data[i-2]['images'][0]['imageurl'],
+                                              height: MediaQuery.of(context).size.height/3.5,
+                                              width: MediaQuery.of(context).size.width/2.2,
+                                            ),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width/2.2,
                                             child: Padding(
                                               padding: const EdgeInsets.all(1.0),
-                                              child:  Center(child: AutoSizeText(data[i-2]['productname'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),maxLines: 2,overflow: TextOverflow.ellipsis,)),
+                                              child:  Center(child: AutoSizeText(data[i-2]['productname'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                                             ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.fromLTRB(0,1,0,1),
-                                            child: Container(child: AutoSizeText('₹ '+data[i-2]['price'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),maxLines: 2)),
+                                            child: Container(child: AutoSizeText('₹ '+data[i-2]['price'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),maxLines: 1)),
                                           )
                                         ],
                                       )
@@ -534,27 +658,31 @@ class _PageState extends State<Page> {
                                   },
                                   splashColor: Color(0xFF083663),
                                   child: Card(
+                                      color:Color(0xFF083663),
                                       shape: new RoundedRectangleBorder(
                                         borderRadius: new BorderRadius.circular(15),
                                       ),
                                       elevation: 10,
                                       child: Column(
                                         children: <Widget>[
-                                          Image.asset(
-                                            'assets/logo.png',
-                                            height: MediaQuery.of(context).size.height/3.5,
-                                            width: MediaQuery.of(context).size.width/2.2,
+                                          Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Image.asset(
+                                              'assets/logo.png',
+                                              height: MediaQuery.of(context).size.height/3.5,
+                                              width: MediaQuery.of(context).size.width/2.2,
+                                            ),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width/2.2,
                                             child: Padding(
                                               padding: const EdgeInsets.all(1.0),
-                                              child:  AutoSizeText('',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),maxLines: 2,overflow: TextOverflow.ellipsis,),
+                                              child:  AutoSizeText('',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),maxLines: 1,overflow: TextOverflow.ellipsis,),
                                             ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.fromLTRB(0,1,0,1),
-                                            child: Container(child: AutoSizeText('',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),maxLines: 2)),
+                                            child: Container(child: AutoSizeText('',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                                           )
                                         ],
                                       )
@@ -576,27 +704,31 @@ class _PageState extends State<Page> {
                                   },
                                   splashColor: Color(0xFF083663),
                                   child: Card(
+                                      color:Color(0xFF083663),
                                       shape: new RoundedRectangleBorder(
                                         borderRadius: new BorderRadius.circular(15),
                                       ),
                                       elevation: 10,
                                       child: Column(
                                         children: <Widget>[
-                                          Image.network(
-                                            data[i-2]['images'][0]['imageurl'],
-                                            height: MediaQuery.of(context).size.height/3.5,
-                                            width: MediaQuery.of(context).size.width/2.2,
+                                          Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Image.network(
+                                              data[i-2]['images'][0]['imageurl'],
+                                              height: MediaQuery.of(context).size.height/3.5,
+                                              width: MediaQuery.of(context).size.width/2.2,
+                                            ),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width/2.2,
                                             child: Padding(
                                               padding: const EdgeInsets.all(1.0),
-                                              child:  Center(child: AutoSizeText(data[i-2]['productname'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),maxLines: 2,overflow: TextOverflow.ellipsis,)),
+                                              child:  Center(child: AutoSizeText(data[i-2]['productname'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                                             ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.fromLTRB(0,1,0,1),
-                                            child: Container(child: AutoSizeText('₹ '+data[i-2]['price'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),maxLines: 2)),
+                                            child: Container(child: AutoSizeText('₹ '+data[i-2]['price'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                                           )
                                         ],
                                       )
@@ -611,27 +743,31 @@ class _PageState extends State<Page> {
                                   },
                                   splashColor: Color(0xFF083663),
                                   child: Card(
+                                      color:Color(0xFF083663),
                                       shape: new RoundedRectangleBorder(
                                         borderRadius: new BorderRadius.circular(15),
                                       ),
                                       elevation: 10,
                                       child: Column(
                                         children: <Widget>[
-                                          Image.network(
-                                            data[i-1]['images'][0]['imageurl'],
-                                            height: MediaQuery.of(context).size.height/3.5,
-                                            width: MediaQuery.of(context).size.width/2.2,
+                                          Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Image.network(
+                                              data[i-1]['images'][0]['imageurl'],
+                                              height: MediaQuery.of(context).size.height/3.5,
+                                              width: MediaQuery.of(context).size.width/2.2,
+                                            ),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width/2.2,
                                             child: Padding(
                                               padding: const EdgeInsets.all(2.0),
-                                              child:  Center(child: AutoSizeText(data[i-1]['productname'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),maxLines: 2,overflow: TextOverflow.ellipsis,)),
+                                              child:  Center(child: AutoSizeText(data[i-1]['productname'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                                             ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.fromLTRB(0,1,0,1),
-                                            child: Container(child: AutoSizeText('₹ '+data[i-1]['price'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),maxLines: 2)),
+                                            child: Container(child: AutoSizeText('₹ '+data[i-1]['price'].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),maxLines: 1,overflow: TextOverflow.ellipsis,)),
                                           )
                                         ],
                                       )
@@ -688,13 +824,44 @@ class _PageState extends State<Page> {
                         ),
                         onPressed: () async{
                           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                            return Opacity(child:Center(
-                              child: CircularProgressIndicator(),
-                            ),opacity:1);
+                            return Scaffold(
+                              backgroundColor: Colors.white,
+                              body: Center(
+                                child: SpinKitCubeGrid(
+                                  color:  Color(0xFF083663),
+                                ),
+                              ),
+                            );
                           }));
                           Response response;
                           Dio dio = new Dio();
-                          response = await dio.get("http://amazekart.tech:8000/mainapp/productdatabase", queryParameters: {"search": t});
+                          response = await dio.get("http://amazekart.tech/mainapp/productdatabase", queryParameters: {"search": t});
+//                          data = response.data;
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => Page(response.data,user)));
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.refresh,
+                          color: Color(0xFF442B2D),
+                        ),
+                        onPressed: () async{
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                            return Scaffold(
+                              backgroundColor: Colors.white,
+                              body: Center(
+                                child: SpinKitCubeGrid(
+                                  color:  Color(0xFF083663),
+                                ),
+                              ),
+                            );
+                          }));
+                          Response response;
+                          Dio dio = new Dio();
+                          response = await dio.get("http://amazekart.tech/mainapp/productdatabase");
 //                          data = response.data;
                           Navigator.pop(context);
                           Navigator.pushReplacement(
